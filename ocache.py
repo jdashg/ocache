@@ -32,6 +32,7 @@ def load_config(path=CONFIG_PATH):
 def path_for_digest(digest_bytes):
     enc = base64.urlsafe_b64encode(digest_bytes)
     enc = enc.decode()
+    enc = enc.rstrip('=') # Fixed size, so drop the padding.
     return os.path.join(enc[0:2], enc)
 
 ####
