@@ -75,7 +75,24 @@ while args[0].startswith('-'):
         config = load_config()
         CACHE_DIR = config['CACHE_DIR']
         shutil.rmtree(CACHE_DIR, ignore_errors=True)
-        print("Cache cleared.")
+        print('Cache cleared.')
+        exit(0)
+
+    if arg == '--stat':
+        config = load_config()
+        CACHE_DIR = config['CACHE_DIR']
+        cache_count = 0
+        cache_bytes = 0
+        for (cur_dir, dirs, files) in os.walk(CACHE_DIR):
+            if cur_dir[:-3] == CACHE_DIR:
+                cache_count += len(dirs)
+
+            for x in files:
+                stat = os.stat(os.path.join(cur_dir, x))
+                cache_bytes += stat.st_size
+
+        cache_mb = cache_bytes / 1000 / 1000
+        print('{} cached elements ({:,.4}MB)'.format(cache_count, cache_mb))
         exit(0)
 
     print('Unknown flag: {}'.format(arg))
